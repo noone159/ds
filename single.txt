@@ -1,0 +1,200 @@
+#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node* next;
+};
+struct List {
+    Node* head;
+    int count;
+};
+void createList(List& list) {
+    list.head = nullptr;
+    list.count = 0;
+    cout << "List created\n";
+}
+
+bool insertNode(List& list, int dataIn) {
+    Node* pNew = new Node();
+    if (pNew == nullptr) return false; 
+
+    pNew->data = dataIn;
+    if(list.head == nullptr){
+    list.head = pNew;
+    }else{
+        Node* current = list.head;
+        while (current->next != nullptr) {
+            current = current->next;
+        }
+        current->next = pNew;
+    }
+    pNew->next = nullptr;
+    list.count++;
+    return true;
+}
+
+bool deleteNode(List& list, Node* pPre, Node* pLoc, int& dataOut) {
+    if (pLoc == nullptr) return false;
+
+    dataOut = pLoc->data;
+    if (pPre == nullptr) { 
+        list.head = pLoc->next;
+    } else {
+        pPre->next = pLoc->next;
+    }
+    delete pLoc;
+    list.count--;
+    return true;
+}
+bool searchList(List& list, Node*& pPre, Node*& pLoc, int target) {
+    pPre = nullptr;
+    pLoc = list.head;
+    
+    while (pLoc != nullptr && target > pLoc->data) {
+        pPre = pLoc;
+        pLoc = pLoc->next;
+    }
+    
+    if (pLoc == nullptr || pLoc->data != target) {
+        return false;
+    }
+    return true;
+}
+bool retrieveNode(List& list, int key, int& dataOut) {
+    Node* pPre = nullptr;
+    Node* pLoc = nullptr;
+    bool found = searchList(list, pPre, pLoc, key);
+    
+    if (found) {
+        dataOut = pLoc->data;
+    }
+    
+    return found;
+}
+bool emptyList(List& list) {
+    return (list.count == 0);
+}
+int listCount(List& list) {
+    return list.count;
+}
+bool getNext(List& list, int& fromWhere, int& dataOut) {
+    static Node* pos = nullptr;
+
+    if (emptyList(list)) return false;
+
+    if (fromWhere == 0) {
+        pos = list.head;
+        fromWhere++;
+    } else if (pos == nullptr) {
+        return false;
+    } else {
+        pos = pos->next;
+    }
+
+    if (pos != nullptr) {
+        dataOut = pos->data;
+        return true;
+    }
+    return false;
+}
+void destroyList(List& list) {
+    Node* temp;
+    while (list.head != nullptr) {
+        temp = list.head;
+        list.head = list.head->next;
+        delete temp;
+    }
+    list.count = 0;
+    cout << "List destroyed\n";
+}
+
+int main() {
+    List myList;
+    int choice, data, target, fromWhere = 0;
+
+    while (true) {
+        cout << "1. Create\n2. Insert\n3. Delete\n4. Search\n5. Retrieve\n6. Count\n7. Display\n8. Destroy\n9. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            createList(myList);
+            break;
+
+        case 2: {
+            cout << "Enter data: ";
+            cin >> data;
+            if (insertNode(myList, data)) {
+                cout << "Inserted\n";
+            } else {
+                cout << "Memory overflow\n";
+            }
+            break;
+        }
+
+        case 3: {
+            cout << "Enter data to delete: ";
+            cin >> target;
+            Node* pPre = nullptr;
+            Node* pLoc = nullptr;
+            if (searchList(myList, pPre, pLoc, target)) {
+                if (deleteNode(myList, pPre, pLoc, data)) {
+                    cout << "Deleted: " << data << "\n";
+                }
+            } else {
+                cout << "Data not found\n";
+            }
+            break;
+        }
+
+        case 4: {
+            cout << "Enter target to search: ";
+            cin >> target;
+            Node* pPre = nullptr;
+            Node* pLoc = nullptr;
+            if (searchList(myList, pPre, pLoc, target)) {
+                cout << "Data found\n";
+            } else {
+                cout << "Data not found\n";
+            }
+            break;
+        }
+
+        case 5: {
+            cout << "Enter target to retrieve: ";
+            cin >> target;
+            if (retrieveNode(myList, target, data)) {
+                cout << "Retrieved: " << data << "\n";
+            } else {
+                cout << "Data not found\n";
+            }
+            break;
+        }
+
+        case 6:
+            cout << "There are " << listCount(myList) << " elements\n";
+            break;
+
+        case 7: {
+            int fromWhere = 0;
+            while (getNext(myList, fromWhere, data)) {
+                cout << data << " -> ";
+            }
+            cout << "NULL\n";
+            break;
+        }
+
+        case 8:
+            destroyList(myList);
+            break;
+
+        case 9:
+            return 0;
+
+        default:
+            cout << "Invalid choice. Try again.\n";
+            break;
+        }
+    }
+}

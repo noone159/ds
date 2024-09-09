@@ -1,0 +1,145 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* link;
+};
+
+struct Stack {
+    int count;
+    Node* top;
+};
+
+Stack* createStack() {
+    Stack* stackHead = new Stack;
+    stackHead->count = 0;
+    stackHead->top = nullptr;
+    return stackHead;
+}
+
+bool pushStack(Stack* stackHead, int dataIn) {
+    Node* T = new Node;
+    T->data = dataIn;
+    T->link = stackHead->top;
+    stackHead->top = T;
+    stackHead->count++;
+    return true;
+}
+
+bool popStack(Stack* stackHead, int &dataOut) {
+    if (stackHead->top == nullptr) {
+        return false; // Stack underflow
+    } else {
+        Node* T = stackHead->top;
+        dataOut = T->data;
+        stackHead->top = T->link;
+        delete T;
+        stackHead->count--;
+        return true;
+    }
+}
+
+bool stackTop(Stack* stackHead, int &dataOut) {
+    if (stackHead->top == nullptr) {
+        return false; // Stack is empty
+    } else {
+        dataOut = stackHead->top->data;
+        return true;
+    }
+}
+
+bool emptyStack(Stack* stackHead) {
+    return (stackHead->count == 0);
+}
+
+void displayStack(Stack* stackHead) {
+    if (stackHead->top == nullptr) {
+        cout << "Stack is empty!" << endl;
+    } else {
+        Node* current = stackHead->top;
+        cout << "Stack contents (top to bottom): ";
+        while (current != nullptr) {
+            cout << current->data;
+            current = current->link;
+            if (current != nullptr) {
+                cout << " -> ";
+            }
+        }
+        cout << endl;
+    }
+}
+
+void destroyStack(Stack* stackHead) {
+    while (stackHead->top != nullptr) {
+        Node* T = stackHead->top;
+        stackHead->top = T->link;
+        delete T;
+    }
+    cout<<"Successfully destroyed..."<<endl;
+    delete stackHead;
+}
+
+int main() {
+    Stack* stack = createStack();
+    int choice, data;
+
+    do {
+        cout << "\nStack Operations Menu:";
+        cout << "\n1. Push";
+        cout << "\n2. Pop";
+        cout << "\n3. Display Top Element";
+        cout << "\n4. Display Stack";
+        cout << "\n5. Check if Stack is Empty";
+        cout << "\n6. Destroy";
+        cout << "\n7. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        switch(choice) {
+            case 1:
+                cout << "Enter data to push: ";
+                cin >> data;
+                pushStack(stack, data);
+                cout << "Pushed " << data << " onto the stack." << endl;
+                break;
+            case 2:
+                if (popStack(stack, data)) {
+                    cout << "Popped from stack: " << data << endl;
+                } else {
+                    cout << "Stack underflow! Cannot pop from an empty stack." << endl;
+                }
+                break;
+            case 3:
+                if (stackTop(stack, data)) {
+                    cout << "Top of stack: " << data << endl;
+                } else {
+                    cout << "Stack is empty!" << endl;
+                }
+                break;
+            case 4:
+                displayStack(stack);
+                break;
+            case 5:
+                if (emptyStack(stack)) {
+                    cout << "Stack is empty!" << endl;
+                } else {
+                    cout << "Stack is not empty." << endl;
+                }
+                break;
+            case 6:
+                destroyStack(stack);
+                return 0;
+            default:
+            case 7:
+                cout<<"Exiting ..."<<endl;
+                cout << "Invalid choice! Please try again." << endl;
+                return 0;
+               
+        }
+    } while(1);
+
+    destroyStack(stack);
+
+    return 0;
+}

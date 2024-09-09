@@ -1,0 +1,144 @@
+#include<iostream>
+using namespace std;
+const int MAXSIZE = 100;
+
+struct ListNode{
+int data;
+ListNode* link;
+};
+
+struct HeadNode{
+int count;
+ListNode* first;
+};
+
+int hashFunction(int key,int maxSize){
+return key%maxSize;
+}
+
+HeadNode* hashTable;
+
+void createHashTable(int maxSize){
+hashTable = new HeadNode[maxSize];
+for(int walker=0;walker<maxSize;walker++){
+hashTable[walker].count=0;
+hashTable[walker].first = nullptr;
+}
+
+}
+
+ListNode* createNode(int key){
+ListNode* newNode = new ListNode();
+newNode->data = key;
+newNode->link=nullptr;
+return newNode;
+}
+
+bool insertToHashTable(HeadNode* hashTable,int size,int key){
+int hashIndex = hashFunction(key,size);
+ListNode* T = createNode(key);
+T->link = hashTable[hashIndex].first;
+hashTable[hashIndex].first = T;
+hashTable[hashIndex].count++;
+return true;
+}
+
+bool deleteFromHashTable(HeadNode* hashTable,int size,int dltKey){
+int hashIndex = hashFunction(dltKey,size);
+ListNode* delNode = hashTable[hashIndex].first;
+ListNode* pred = nullptr;
+while(delNode!=nullptr){
+if(delNode->data == dltKey){
+ if(pred == nullptr){
+ hashTable[hashIndex].first = delNode->link;
+ }else{
+ pred->link = delNode->link;
+}
+delete delNode;
+hashTable[hashIndex].count--;
+return true;
+}
+pred = delNode;
+delNode = delNode->link;
+}
+return false;
+}
+
+bool searchInHashTable(HeadNode* hashTable,int size,int key,int &locn){
+int hashIndex = hashFunction(key,size);
+ListNode* searchNode = hashTable[hashIndex].first;
+
+while(searchNode!=nullptr){
+if(searchNode->data==key){
+locn = hashIndex;
+return true;
+}
+searchNode = searchNode->link;
+}
+return false;
+}
+
+void display(HeadNode* hashTable,int size){
+for(int walker=0;walker<size;walker++){
+ cout<<"Bucket"<<walker<<":";
+ ListNode* temp = hashTable[walker].first;
+ while(temp!=nullptr){
+ cout<<temp->data<<"->";
+ temp= temp->link;
+}
+cout<<"Null ( Count : "<<hashTable[walker].count<<")\n";
+}
+}
+
+int main(){
+int size;
+cout<<"Enter the size of the hash table : ";
+cin>>size;
+
+//HeadNode* hashTable = new HeadNode[size];
+createHashTable(size);
+
+int choice,value;
+
+while(true){
+cout<<"1.Insert\n2.Delete\n3.Search\n4.Display\n5.Exit\nEnter Your Choice:";
+cin>>choice;
+
+switch(choice){
+case 1:
+   cout<<"Enter the value to insert:";
+   cin>>value;
+   insertToHashTable(hashTable,size,value);
+   break;
+case 2:
+   cout<<"Enter the value to delete:";
+   cin>>value;
+   if( deleteFromHashTable(hashTable,size,value) ){
+   cout<<"Deleted "<<value<<" from the Hash Table\n";
+   }else{
+   cout<<value<<" not found in the HashTable\n";
+   }
+   break;
+case 3:
+  cout<<"Enter the value to search :";
+  cin>>value;
+  int locn;
+  if( searchInHashTable(hashTable,size,value,locn) ){
+   cout<<value<<" found in the table at index "<<locn<<"\n";
+  }else{
+   cout<<value<<" not found in the table\n";
+  }
+  break;
+case 4:
+ display(hashTable,size);
+ break;
+case 5:
+ cout<<"Exiting...\n";
+ return 0;
+default:
+ cout<<"Invalid choice.Try Again";
+}
+
+}
+
+}

@@ -1,0 +1,132 @@
+#include <iostream>
+using namespace std;
+struct DataNode {
+    int data;
+    DataNode* link;
+};
+struct QueueHead {
+    DataNode* front;
+    DataNode* rear;
+    int count;
+};
+QueueHead* createQueue() {
+    QueueHead* queueHead = new QueueHead;
+    queueHead->count = 0;
+    queueHead->front = nullptr;
+    queueHead->rear = nullptr;
+    return queueHead;
+}
+bool enqueue(QueueHead* queueHead, int dataIn) {
+    DataNode* T = new DataNode;
+    T->data = dataIn;
+     newNode->link = nullptr;
+    
+    if (queueHead->rear == nullptr) {
+        queueHead->front = T;
+    } else {
+        queueHead->rear->link = T;
+    }
+    queueHead->rear = T;
+    queueHead->count++;
+    return true;
+}
+bool dequeue(QueueHead* queueHead, int &dataOut) {
+    DataNode* T = queueHead->front;
+    dataOut = T->data;
+    queueHead->front = T->link;
+    if (queueHead->front == nullptr) {
+        queueHead->rear = nullptr; 
+    }
+    delete T;
+    queueHead->count--;
+    return true;
+}
+bool queueFront(QueueHead* queueHead, int &dataOut) {
+    if (queueHead->front == nullptr) {
+        return false; // Queue is empty
+    }
+    dataOut = queueHead->front->data;
+    return true;
+}
+bool queueRear(QueueHead* queueHead, int &dataOut) {
+    if (queueHead->rear == nullptr) {
+        return false; // Queue is empty
+    }
+    dataOut = queueHead->rear->data;
+    return true;
+}
+bool emptyQueue(QueueHead* queueHead) {
+    return queueHead->count == 0;
+}
+int queueCount(QueueHead* queueHead) {
+    return queueHead->count;
+}
+void destroyQueue(QueueHead* queueHead) {
+    while (queueHead->front != nullptr) {
+        DataNode* T = queueHead->front;
+        queueHead->front = T->link;
+        delete T;
+    }
+    queueHead->rear = nullptr;
+    delete queueHead;
+}
+void displayQueue(QueueHead* queueHead) {
+    if (emptyQueue(queueHead)) {
+        cout << "Queue is empty" << endl;
+    } else {
+        DataNode* current = queueHead->front;
+        while (current != nullptr) {
+            cout << current->data;
+            if (current->link != nullptr) {
+                cout << " -> ";  // Add an arrow between elements
+            }
+            current = current->link;
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    QueueHead* queueHead = createQueue();
+    int choice, data;
+    while (true) {
+        cout << "1. Enqueue 2. Dequeue 3. Queue Front 4. Queue Rear 5. Empty Queue 6. Queue Count 7. Display Queue 8. Destroy Queue 9. Exit\n" << "\n Enter your choice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1:
+                cout << "Enter data: ";
+                cin >> data;
+                if (enqueue(queueHead, data)) cout << "Enqueued\n";
+                else cout << "Queue operation failed\n";
+                break;
+            case 2:
+                if (dequeue(queueHead, data)) cout << "Dequeued: " << data << endl;
+                else cout << "Queue is empty\n";
+                break;
+            case 3:
+                if (queueFront(queueHead, data)) cout << "Front: " << data << endl;
+                else cout << "Queue is empty\n";
+                break;
+            case 4:
+                if (queueRear(queueHead, data)) cout << "Rear: " << data << endl;
+                else cout << "Queue is empty\n";
+                break;
+            case 5:
+                if (emptyQueue(queueHead)) cout << "Queue is empty\n";
+                else cout << "Queue is not empty\n";
+                break;
+            case 6:
+                cout << "Queue count: " << queueCount(queueHead) << endl;
+                break;
+            case 7:
+                displayQueue(queueHead);
+                break;
+            case 8:
+                destroyQueue(queueHead);
+                cout << "Queue destroyed\n";
+                break;
+            case 9:
+                return 0;
+        }
+    }
+}

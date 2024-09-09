@@ -1,0 +1,202 @@
+binary search
+#include<iostream>
+using namespace std;
+bool Binarysearch(int list[],int last,int target,int &locn)
+{
+int begin=0;
+int end=last;
+
+ bool found;
+int mid=0;
+while(begin<=end)
+{
+ mid=(begin+end)/2;
+if(target>list[mid])
+{
+begin=mid+1;
+}
+else if(target<list[mid])
+{
+end=mid-1;
+}
+else{
+begin=end+1;
+}
+}
+ locn=mid;
+if(target==list[mid])
+{
+found=true;
+}
+else{
+found=false;
+}
+return found;
+}
+int main()
+{
+int n;
+cout<<"enter the no of elements";
+cin>>n;
+int list[n];
+for(int i=0;i<n;i++)
+{
+cout<<"enter the number"<<i+1<<":";
+cin>>list[i];
+}
+int target;
+cout<<"enter the target:";
+cin>>target;
+int locn=0;
+bool found= Binarysearch(list,n-1,target,locn);
+if(found)
+{
+cout<<"target found at"<<locn<<endl;
+}
+else{
+cout<<"target not found"<<endl;
+}
+return 0;
+}
+rec binary search
+#include<iostream>
+using namespace std;
+bool recursiveBinarySearch(int list[],int first,int last,int target,int*locn)
+{
+	if(first>last)
+	{
+		*locn=-1;
+		return false;
+	}
+	int mid=(first+last)/2;
+	if(target<list[mid])
+	{
+		return recursiveBinarySearch(list,last,mid-1,target,locn);
+	}
+	else if(target>list[mid])
+	{
+		return recursiveBinarySearch(list,mid+1,last,target,locn);
+	}
+	else
+	{
+		*locn=mid+1;
+		return true;
+	}
+}
+int main()
+{
+	int list[100];
+	int n;
+	int target;
+	int locn;
+	cout<<"Enter the no.of elements in the array: ";
+	cin>>n;
+	cout<<"Enter the elements of the array: ";
+	for(int i=0;i<n;i++)
+	{
+		cin>>list[i];
+	}
+	cout<<"Enter the Target Value: ";
+	cin>>target;
+	bool found=recursiveBinarySearch(list,0,n-1,target,&locn);
+	if(found)
+	{
+	cout<<"The target number is found at position "<<locn<<endl;
+}
+	else
+	{
+	cout<<"The target number is not found"<<endl;
+    }  
+    return 0;
+}
+sequential search
+#include<iostream>
+using namespace std;
+int seqSearch(int list[],int last,int target, int*loc)
+{
+	int looker=0;
+	bool found=false;
+	while(looker<last&&target!=list[looker])
+	{
+		looker++;
+	}
+	*loc=looker+1;
+	if(target==list[looker])
+	{
+		found=true;
+	}
+	else
+	{
+		found = false;
+	}
+	return found;
+}
+int main()
+{
+	int list[100];
+	int last;
+	cout<<"Enter the size of the list: ";
+	cin>>last;
+	cout<<"Enter the elements of the list: ";
+	for(int i=0;i<last;i++)
+	{
+		cin>>list[i];
+	}
+	int target;
+	cout<<"Enter the target value of the list: ";
+	cin>>target;
+	int loc;
+	bool found=seqSearch(list,last,target,&loc);
+	if(found)
+	{
+		cout<<"The target value is found at position "<<loc<<endl;
+	}
+	else
+	{
+		cout<<"The target value is not found in the list"<<endl;
+	}
+	return 1;
+}
+rec sequential search
+#include<iostream>
+using namespace std;
+int recSeqSearch(int list[],int index,int last, int &locn,int target)
+{
+	if(index>last)
+	{
+		locn=-1;
+		return false;
+	}
+	if(target==list[index])
+	{
+		locn=index+1;
+		return true;
+	}
+	return recSeqSearch(list,index+1,last,locn,target);
+}
+int main()
+{
+int n;
+    cout<<"Enter the number of elements in the list: ";
+	cin>>n;
+	int list[n];
+	cout<<"Enter the elements of the list: ";
+	for(int i=0;i<n;i++)
+	{
+		cin>>list[i];
+	}
+	int target;
+	cout<<"Enter the target value of the list: ";
+	cin>>target;
+	int locn;
+	bool found=recSeqSearch(list,0,n-1,locn,target);
+	if(found)
+	{
+		cout<<"The target value is found at position "<<locn;
+	}
+	else
+	{
+		cout<<"The target value is not found in the list";
+	}
+	return 0;
+}

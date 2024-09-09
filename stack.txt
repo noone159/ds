@@ -1,0 +1,106 @@
+#include<iostream>
+using namespace std;
+
+const int MAXSIZE = 10;
+int top=-1;
+bool fullStack();
+bool emptyStack();
+
+bool pushStack(int stack[],int dataIn){
+bool success;
+if(fullStack()){
+success = true;
+}else{
+top++;
+stack[top] = dataIn;
+success=true;
+}
+return success;
+}
+
+bool popStack(int stack[],int &dataOut){
+bool success;
+if(emptyStack()){
+success = false;
+}else{
+dataOut = stack[top];
+top--;
+success = true;
+}
+return success;
+}
+
+bool fullStack(){
+if(top == MAXSIZE){
+return true;
+}else{
+return false;
+}
+}
+
+bool emptyStack(){
+if(top==-1){
+return true;
+}else{
+return false;
+}
+}
+
+bool stackTop(int stack[],int &dataOut){
+bool success;
+
+if(emptyStack()){
+success = true;
+}else{
+dataOut = stack[top];
+success = true;
+}
+return success;
+}
+
+int main(){
+int operation;
+int stack[MAXSIZE],data;
+
+while(true){
+cout<<"Enter the Appropriate Option: \n1.Push\n2.Pop\n3.Display\n4.Get Stack Top\n5.Exit\n";
+cin>>operation;
+
+switch(operation){
+case 1:
+ cout<<"Enter element to push:";
+cin>>data;
+if(pushStack(stack,data)){
+cout<<"Element "<<data<<" Pushed\n";
+}else{
+cout<<"Stack is Full\n";
+}
+break;
+case 2:
+if(popStack(stack,data)){
+cout<<"Element Popped : "<<data<<"\n";
+}else{
+cout<<"Stack is Empty\n";
+}
+break;
+case 3:
+for(int i=0;i<=top;i++){
+cout<<stack[i]<<" ";
+}
+cout<<"\n";
+break;
+case 4:
+if(stackTop(stack,data)){
+cout<<"Stack Top is :"<<data<<"\n";
+}else{
+cout<<"Stack is Empty\n";
+}
+break;
+case 5:
+return 0;
+default:
+cout<<"Invalid Option. Try Again!\n";
+break;
+}
+}
+}

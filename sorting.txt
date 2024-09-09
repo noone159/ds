@@ -1,0 +1,77 @@
+selection sort
+#include<iostream>
+using namespace std;
+
+int selectionsort(int A[],int n)
+{
+for(int i=0;i<n-1;i++)
+{
+int min=i;
+for(int j=i+1;j<n;j++)
+{
+if(A[j]<A[min])
+{
+min=j;
+}
+}
+swap(A[min],A[i]);
+}
+for(int i=0;i<n;i++)
+{
+cout<<A[i]<<"\n";
+}
+
+return 0;
+}
+int main()
+{
+int n;
+cout<<"enetr the number of elements:";
+cin>>n;
+int A[n];
+for(int i=0;i<n;i++)
+{
+cin>>A[i];
+}
+cout<<"\n";
+selectionsort(A,n);
+return 0;
+
+}
+insertion sort
+#include<iostream>
+using namespace std;
+int insertionsort(int A[],int n)
+{
+for(int i=2;i<n;i++)
+{
+int key=A[i];
+int j=i-1;
+while(j>=00&&A[j]>key)
+{
+A[j+1]=A[j];
+j=j-1;
+A[j+1]=key;
+}
+}
+for(int i=0;i<n;i++)
+{
+cout<<A[i]<<"\n";
+}
+return 0;
+}
+int main()
+{
+int n;
+cout<<"enetr the number of elements:";
+cin>>n;
+int A[n];
+for(int i=0;i<n;i++)
+{
+cin>>A[i];
+}
+cout<<"\n";
+insertionsort(A,n);
+return 0;
+
+}

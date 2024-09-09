@@ -1,0 +1,140 @@
+#include<iostream>
+using namespace std;
+
+const int MAXSIZE = 4;
+int front=-1;
+int rear = -1;
+
+bool fullQueue();
+bool emptyQueue();
+
+bool enqueue(int queue[],int dataIn){
+bool success;
+if(fullQueue()){
+success = false;
+}else{
+rear++;
+queue[rear] = dataIn;
+if(front == -1){
+front = 0;
+}
+success=true;
+}
+return success;
+}
+
+bool dequeue(int queue[],int &dataOut){
+bool success;
+if(emptyQueue()){
+success = false;
+}else{
+dataOut = queue[front];
+if(front == rear){
+front = -1;
+rear = -1;
+}else{
+front++;
+}
+success = true;
+}
+return success;
+}
+
+bool fullQueue(){
+if((rear-front+1) == MAXSIZE){
+return true;
+}else{
+return false;
+}
+}
+
+bool emptyQueue(){
+if(front==-1 && rear == -1){
+return true;
+}else{
+return false;
+}
+}
+
+bool queueRear(int queue[],int &dataOut){
+bool success;
+
+if(emptyQueue()){
+success = true;
+}else{
+dataOut = queue[rear];
+success = true;
+}
+return success;
+}
+
+bool queueFront(int queue[],int &dataOut){
+bool success;
+
+if(emptyQueue()){
+success = true;
+}else{
+dataOut = queue[front];
+success = true;
+}
+return success;
+}
+
+int queueCount(){
+if(emptyQueue()){
+return 0;
+}else{
+return rear-front+1;
+}
+}
+
+int main(){
+int operation;
+int queue[MAXSIZE],data;
+
+while(true){
+cout<<"Enter the Appropriate Option: \n1.Enqueue\n2.Dequeue\n3.Get Queue Count\n4.Get Queue Front Element\n5.Get Rear Element\n6.Exit\n";
+cin>>operation;
+
+switch(operation){
+case 1:
+ cout<<"Enter element to Enqueue:";
+cin>>data;
+if(enqueue(queue,data)){
+cout<<"Element "<<data<<" Enqueued\n";
+}else{
+cout<<"Queue is Full\n";
+}
+break;
+case 2:
+if(dequeue(queue,data)){
+cout<<"Element Dequeued : "<<data<<"\n";
+}else{
+cout<<"Queue is Empty\n";
+}
+break;
+case 3:
+cout<<"Count: "<<queueCount()<<"\n";
+break;
+case 4:
+if(queueFront(queue,data)){
+cout<<"Queue Front is :"<<data<<"\n";
+}else{
+cout<<"Queue is Empty\n";
+}
+break;
+case 5:
+if(queueRear(queue,data)){
+cout<<"Queue Front is :"<<data<<"\n";
+}else{
+cout<<"Queue is Empty\n";
+}
+break;
+case 6:
+return 0;
+default:
+cout<<"Invalid Option. Try Again!\n";
+break;
+}
+}
+}

@@ -1,0 +1,118 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int MAXSIZE = 100;
+int top = -1;
+
+void createstack(char stack[]);
+bool fullStack();
+bool emptyStack();
+bool push(char stack[], char dataIn);
+bool popStack(char stack[], char &dataOut);
+char stackTop(char stack[]);
+int getPriority(char op);
+
+void createstack(char stack[]) {
+    top = -1; 
+        for (int i = 0; i < MAXSIZE; i++) {
+        stack[i] = '\0';
+    }
+}
+
+bool push(char stack[], char dataIn) {
+    if (fullStack()) {
+        return false;
+    } else {
+        top++;
+        stack[top] = dataIn;
+        return true;
+    }
+}
+
+bool popStack(char stack[], char &dataOut) {
+    if (emptyStack()) {
+        return false;
+    } else {
+        dataOut = stack[top];
+        top--;
+        return true;
+    }
+}
+
+bool fullStack() {
+    return top == MAXSIZE - 1;
+}
+
+bool emptyStack() {
+    return top == -1;
+}
+
+char stackTop(char stack[]) {
+    if (emptyStack()) {
+        return '\0';
+    } else {
+        return stack[top];
+    }
+}
+
+int getPriority(char op) {
+    if (op == '^') {
+        return 3;
+    } else if (op == '*' || op == '/') {
+        return 2;
+    } else if (op == '+' || op == '-') {
+        return 1;
+    } else if (op == '(') {
+        return 0;
+    }
+    return -1; 
+}
+
+string inToPostFix(const string& formula) {
+    char data;
+    char opStack[MAXSIZE];
+    string postFixExpr;
+
+    // Initialize the stack
+    createstack(opStack);
+
+    for (int i = 0; i < formula.length(); ++i) {
+        char character = formula[i];
+
+        if (character == '(') {
+            push(opStack, character);
+        } else if (character == ')') {
+            popStack(opStack, data);
+            while (data != '(') {
+                postFixExpr += data;
+                popStack(opStack, data);
+            }
+        } else if (character == '+' || character == '-' || character == '*' || character == '/' || character == '^') {
+            while (!emptyStack() && getPriority(character) <= getPriority(stackTop(opStack))) {
+                popStack(opStack, data);
+                postFixExpr += data;
+            }
+            push(opStack, character);
+        } else if (isalnum(character)) {
+            postFixExpr += character;
+        }
+    }
+
+    while (!emptyStack()) {
+        popStack(opStack, data);
+        postFixExpr += data;
+    }
+
+    return postFixExpr;
+}
+
+int main() {
+    string infixFormula;
+    cout << "Enter an infix formula: ";
+    cin >> infixFormula;
+    string postfixFormula = inToPostFix(infixFormula);
+
+    cout << "Postfix notation: " << postfixFormula << endl;
+    return 0;
+}
